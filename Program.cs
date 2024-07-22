@@ -15,7 +15,7 @@ builder.Services.AddSession(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<Tl13shopContext>(options => 	options.UseSqlServer(builder.Configuration.GetConnectionString("TL13Shop")));
+builder.Services.AddDbContext<Tl13shopContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TL13Shop")));
 
 var app = builder.Build();
 
@@ -33,6 +33,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSession();
