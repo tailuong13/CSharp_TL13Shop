@@ -125,4 +125,5 @@ Insert into Roles(RoleName, isActive) values
 ('admin', 1),
 ('customer',1)
 
-
+Alter table Users
+Add RandomKey varchar(max) null

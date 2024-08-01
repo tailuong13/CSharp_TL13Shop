@@ -25,6 +25,8 @@ public partial class User
 
     public DateTime CreatedDate { get; set; }
 
+    public string? RandomKey { get; set; }
+
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();

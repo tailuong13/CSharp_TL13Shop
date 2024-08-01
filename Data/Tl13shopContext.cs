@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TL13Shop.Models;
+
 
 namespace TL13Shop.Data;
 
@@ -42,12 +40,12 @@ public partial class Tl13shopContext : DbContext
 
     public virtual DbSet<WishList> WishLists { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
     {
-
+    
     }
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-E4IRA0MP;Initial Catalog=TL13Shop;Persist Security Info=True;User ID=sa;Password=1234567;Trust Server Certificate=TrueData Source=LAPTOP-E4IRA0MP;Initial Catalog=TL13Shop;Persist Security Info=True;User ID=sa;Password=1234567;Trust Server Certificate=True");
+//        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-E4IRA0MP;Initial Catalog=TL13Shop;Persist Security Info=True;User ID=sa;Password=1234567;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -240,6 +238,7 @@ public partial class Tl13shopContext : DbContext
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+            entity.Property(e => e.RandomKey).IsUnicode(false);
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
                 .IsUnicode(false);

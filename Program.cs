@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using TL13Shop.Data;
 
@@ -16,6 +17,13 @@ builder.Services.AddSession(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<Tl13shopContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TL13Shop")));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+	.AddCookie(options =>
+	{
+		options.LoginPath = "/User/Login";
+		options.AccessDeniedPath = "/User/AccessDenied";
+	});
 
 var app = builder.Build();
 

@@ -1,0 +1,42 @@
+﻿@model TL13Shop.Models.LoginVM
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container-fluid bg-secondary mb-5">
+	<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+		<h1 class="font-weight-semi-bold text-uppercase mb-3">Login</h1>
+		<div class="d-inline-flex">
+			<p class="m-0"><a asp-controller="Home" asp-action="Index">Home</a></p>
+			<p class="m-0 px-2">-</p>
+			<p class="m-0">Login</p>
+		</div>
+	</div>
+</div>
+
+
+<div class="container-fluid pt-5">
+	<div class="row">
+		<div class="col-md-6 offset-md-3">
+			<h2>Đăng ký</h2>
+			<form asp-action="Login" asp-controller="User" asp-route-returnurl="@ViewBag.ReturnUrl" enctype="multipart/form-data">
+				<div class="text-danger" asp-validation-summary="All"></div>
+				<div class="col-md-12 form-group">
+					<label asp-for="@Model.UserName"></label>
+					<input asp-for="@Model.UserName" class="form-control" placeholder="Username">
+					<span asp-validation-for="@Model.UserName" class="text-danger"></span>
+				</div>
+				<div class="col-md-12 form-group">
+					<label asp-for="@Model.Password"></label>
+					<input asp-for="@Model.Password" class="form-control" placeholder="Password">
+					<span asp-validation-for="@Model.Password" class="text-danger"></span>
+				</div>
+				<div class="card-footer border-secondary bg-transparent">
+					<button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Login</button>
+				</div>
+				<a asp-action="ForgotPassword" asp-controller="User">Forgot Password?</a>
+				<a asp-action="Register" asp-controller="KhachHang">Register User</a>
+			</form>
+		</div>
+	</div>
+</div>

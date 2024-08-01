@@ -22,7 +22,8 @@ namespace TL13Shop.Models
 		[DataType(DataType.Password)]
         [Compare("Password" , ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-        public int RoleId { get; set; }
+        //public string RandomKey { get; set; }
+        //public int RoleId { get; set; }
 		public DateTime CreatedDate { get; set; }
 	}
 }
