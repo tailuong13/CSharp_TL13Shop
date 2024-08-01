@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using TL13Shop.Data;
 using TL13Shop.Helpers;
@@ -98,6 +99,7 @@ namespace TL13Shop.Controllers
                         var claims = new List<Claim>
                         {
                             new Claim(ClaimTypes.Name, user.UserName),
+                            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                             new Claim("RoleId", user.RoleId.ToString()),
                             new Claim(ClaimTypes.Role, "Customer")
                         };
@@ -121,11 +123,27 @@ namespace TL13Shop.Controllers
         }
         #endregion
         [Authorize]
-        public IActionResult Profile()
-        {
-            return View();
-        }
-        [Authorize]
+        public IActionResult Profile(int userId)
+		{
+			var user = db.Users.SingleOrDefault(u => u.UserId == userId);
+
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			var model = new ProfileViewModel
+			{
+				UserName = user.UserName,
+				FullName = user.FullName,
+				PhoneNumber = user.PhoneNumber,
+				Email = user.Email,
+				Address = user.Address
+			};
+
+			return View(model);
+		}
+		[Authorize]
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync();
