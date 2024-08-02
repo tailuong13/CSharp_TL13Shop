@@ -4,22 +4,33 @@ namespace TL13Shop.Helpers
 {
 	public class Util
 	{
-		public static string UploadHinh(IFormFile Image, string folder)
+		public static string UploadImage(IFormFile Image, string folder)
 		{
 			try
 			{
-				var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadImg", folder, Image.FileName);
-				using (var fileStream = new FileStream(fullPath, FileMode.CreateNew))
+				var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImg", folder);
+
+				if (!Directory.Exists(directoryPath))
+				{
+					Directory.CreateDirectory(directoryPath);
+				}
+
+				var fileName = Path.GetFileName(Image.FileName);
+				var fullPath = Path.Combine(directoryPath, fileName);
+
+				using (var fileStream = new FileStream(fullPath, FileMode.Create))
 				{
 					Image.CopyTo(fileStream);
 				}
-				return Image.FileName;
+
+				return Path.Combine("UserImg", folder, fileName).Replace("\\", "/");
 			}
 			catch (Exception ex)
 			{
 				return string.Empty;
 			}
 		}
+
 
 		public static string GenerateRandomKey(int length = 5)
 		{
