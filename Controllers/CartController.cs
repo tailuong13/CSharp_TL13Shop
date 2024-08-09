@@ -117,7 +117,7 @@ namespace TL13Shop.Controllers
 				db.Database.BeginTransaction();
 				try
 				{
-					db.Database.CommitTransaction(); 
+					
 					db.Add(order);
 					db.SaveChanges();
 
@@ -140,8 +140,14 @@ namespace TL13Shop.Controllers
 							product.Sold += item.Quantity;
 						}
 					}
+					db.OrderDetails.AddRange(orderDetail);
 					db.SaveChanges();
-					HttpContext.Session.Set(ConstSetting.CART_KEY, Cart);
+
+					db.Database.CommitTransaction();
+
+					var cart = Cart;
+					cart.Clear();
+					HttpContext.Session.Set(ConstSetting.CART_KEY, cart);
 
 					return View("Success");
 
