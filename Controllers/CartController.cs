@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TL13Shop.Data;
 using TL13Shop.Helpers;
 using TL13Shop.Models;
@@ -66,5 +68,92 @@ namespace TL13Shop.Controllers
 			}
 			return RedirectToAction("Index");
 		}
+
+		[Authorize]
+		[HttpGet]
+		public IActionResult CheckOut()
+		{
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var user = db.Users.SingleOrDefault(u => u.UserId == int.Parse(userId));
+			var cartItem = Cart;
+
+			if (cartItem.Count == 0)
+			{
+				return Redirect("/");
+			}
+            
+			var data = new CheckoutViewModel
+            {
+                CustomerName = user.FullName,
+                CustomerAddress = user.Address,
+                CustomerPhone = user.PhoneNumber,
+                CartItems = cartItem
+            };
+
+			return View(data);
+		}
+
+		[Authorize]
+		[HttpPost]
+		public IActionResult CheckOut(CheckoutViewModel model)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var user = db.Users.SingleOrDefault(u => u.UserId == int.Parse(userId));
+			if (ModelState.IsValid)
+			{
+				var order = new Order
+				{
+					UserId = int.Parse(userId),
+					CustomerName = model.CustomerName,
+					CustomerPhone = model.CustomerPhone,
+					CustomerAddress = model.CustomerAddress,
+					PaymentMethod = "COD",
+					Note = model.Note,
+					StatusId = 1,
+					OrderDate = DateTime.Now,
+					IsCancel = false
+				};
+
+				db.Database.BeginTransaction();
+				try
+				{
+					db.Database.CommitTransaction(); 
+					db.Add(order);
+					db.SaveChanges();
+
+					var orderDetail = new List<OrderDetail>();
+					foreach (var item in Cart)
+					{
+						orderDetail.Add(new OrderDetail
+						{
+							OrderId = order.OrderId,
+							ProductId = item.ProductId,
+							Amount = item.Quantity,
+							Total = (double)(item.Price * item.Quantity),
+							Discount = 0
+						});
+
+						var product = db.Products.SingleOrDefault(p => p.ProductId == item.ProductId);
+						if (product != null)
+						{
+							product.Quantity -= item.Quantity;
+							product.Sold += item.Quantity;
+						}
+					}
+					db.SaveChanges();
+					HttpContext.Session.Set(ConstSetting.CART_KEY, Cart);
+
+					return View("Success");
+
+				}
+				catch
+				{
+					db.Database.RollbackTransaction();
+				}
+			}
+
+			return View();
+		}
+
 	}
 }

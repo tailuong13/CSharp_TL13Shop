@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace TL13Shop.Data;
 
 public partial class Tl13shopContext : DbContext
@@ -26,6 +25,8 @@ public partial class Tl13shopContext : DbContext
 
     public virtual DbSet<Order> Orders { get; set; }
 
+    public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+
     public virtual DbSet<OrderStatus> OrderStatuses { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
@@ -40,14 +41,11 @@ public partial class Tl13shopContext : DbContext
 
     public virtual DbSet<WishList> WishLists { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
-    {
-    
-    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-E4IRA0MP;Initial Catalog=TL13Shop;Persist Security Info=True;User ID=sa;Password=1234567;Trust Server Certificate=True");
+//		=> optionsBuilder.UseSqlServer("Data Source=LAPTOP-E4IRA0MP;Initial Catalog=TL13Shop;Persist Security Info=True;User ID=sa;Password=1234567;Trust Server Certificate=True");
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Brand>(entity =>
         {
@@ -109,7 +107,7 @@ public partial class Tl13shopContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCF07E798DD");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCF1879922D");
 
             entity.Property(e => e.CustomerAddress).IsUnicode(false);
             entity.Property(e => e.CustomerName)
@@ -118,22 +116,36 @@ public partial class Tl13shopContext : DbContext
             entity.Property(e => e.CustomerPhone)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+            entity.Property(e => e.Note)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.OrderDate).HasColumnType("datetime");
             entity.Property(e => e.PaymentMethod)
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.Product).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK__Orders__ProductI__52593CB8");
-
             entity.HasOne(d => d.Status).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.StatusId)
-                .HasConstraintName("FK__Orders__StatusId__534D60F1");
+                .HasConstraintName("FK__Orders__StatusId__04E4BC85");
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Orders__UserId__5165187F");
+                .HasConstraintName("FK__Orders__UserId__03F0984C");
+        });
+
+        modelBuilder.Entity<OrderDetail>(entity =>
+        {
+            entity.HasKey(e => e.DetailId).HasName("PK__OrderDet__135C316D1D028A90");
+
+            entity.ToTable("OrderDetail");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
+                .HasForeignKey(d => d.OrderId)
+                .HasConstraintName("FK__OrderDeta__Order__08B54D69");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.OrderDetails)
+                .HasForeignKey(d => d.ProductId)
+                .HasConstraintName("FK__OrderDeta__Produ__09A971A2");
         });
 
         modelBuilder.Entity<OrderStatus>(entity =>

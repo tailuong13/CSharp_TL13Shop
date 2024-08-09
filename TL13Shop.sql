@@ -109,21 +109,36 @@ create table Orders
 (
 	OrderId int primary key identity(1,1),
 	UserId int foreign key references Users(UserId) on delete cascade not null,
-	ProductId int foreign key references Product(ProductId) on delete cascade not null,
-	Quantity int null, 
-	Total int null,
 	CustomerName varchar(50) not null,
 	CustomerPhone varchar(20) not null,
 	CustomerAddress varchar(max) not null,
 	PaymentMethod varchar(50) not null,
+	Note varchar(50) null,
 	StatusId int foreign key references OrderStatus(StatusId) on delete cascade not null,
 	OrderDate datetime not null,
-	IsCancle bit not null default 0
+	IsCancel bit not null default 0
+)
+
+create table OrderDetail 
+(
+	DetailId int primary key identity(1,1),
+	OrderId int foreign key references Orders(OrderId) on delete cascade not null,
+	ProductId int foreign key references Product(ProductId) on delete cascade not null,
+	Total float not null,
+	Amount int not null,
+	Discount float null
 )
 
 Insert into Roles(RoleName, isActive) values 
 ('admin', 1),
 ('customer',1)
+
+Insert Into OrderStatus(StatusName) values
+('Is Confirming'),
+('Is Shipping'),
+('Completed'),
+('Cancel')
+
 
 Alter table Users
 Add RandomKey varchar(max) null

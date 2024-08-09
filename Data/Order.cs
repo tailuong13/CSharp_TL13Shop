@@ -9,12 +9,6 @@ public partial class Order
 
     public int UserId { get; set; }
 
-    public int ProductId { get; set; }
-
-    public int? Quantity { get; set; }
-
-    public int? Total { get; set; }
-
     public string CustomerName { get; set; } = null!;
 
     public string CustomerPhone { get; set; } = null!;
@@ -23,13 +17,15 @@ public partial class Order
 
     public string PaymentMethod { get; set; } = null!;
 
+    public string? Note { get; set; }
+
     public int StatusId { get; set; }
 
     public DateTime OrderDate { get; set; }
 
-    public bool IsCancle { get; set; }
+    public bool IsCancel { get; set; }
 
-    public virtual Product Product { get; set; } = null!;
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual OrderStatus Status { get; set; } = null!;
 
