@@ -191,5 +191,48 @@ namespace TL13Shop.Controllers
 			HttpContext.SignOutAsync();
 			return RedirectToAction("Index", "Home");
 		}
+
+		[Authorize]
+		public IActionResult Orders(int userId)
+		{
+			var orders = db.OrderDetails
+				.Include(o => o.Product)
+				.Where(o => o.Order.UserId == userId);
+			var data = orders.Select(o => new OrdersByStatusViewModel
+			{
+				OrderId = o.OrderId,
+				ProductId = o.ProductId,
+				ProductName = o.Product.ProductName,
+				ProductImageUrl = o.Product.ProductImages.FirstOrDefault().ImageUrl,
+				Quantity = o.Amount,
+				Price = o.Product.Price,
+				OrderDate = o.Order.OrderDate
+			});
+			return View(data);
+		}
+
+		public IActionResult OrdersByStatus(int? statusId, int userId)
+		{
+			var orders = db.OrderDetails
+				.Include(o => o.Product)
+				.Where(o => o.Order.UserId == userId);
+			if (statusId != null)
+			{
+				orders = orders.Where(o => o.Order.StatusId == statusId);
+            }
+			
+			var data = orders.Select(o => new OrdersByStatusViewModel
+            {
+                OrderId = o.OrderId,
+                ProductId = o.ProductId,
+                ProductName = o.Product.ProductName,
+                ProductImageUrl = o.Product.ProductImages.FirstOrDefault().ImageUrl,
+                Quantity = o.Amount,
+                Price = o.Product.Price,
+				OrderDate = o.Order.OrderDate
+            });
+
+            return View(data);
+		}
 	}
 }

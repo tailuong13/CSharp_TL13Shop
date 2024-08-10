@@ -95,6 +95,7 @@
 							<a class="nav-link dropdown-toggle" data-toggle="dropdown">Welcome, @Context.User.Identity.Name!</a>
 							<div class="dropdown-menu rounded-0 m-0">
 								<a asp-controller="User" asp-action="Profile" asp-route-userId="@userId" class="dropdown-item">Profile</a>
+									<a asp-controller="User" asp-action="Orders" asp-route-userId="@userId" class="dropdown-item">Your Orders</a>
 								<a asp-controller="User" asp-action="LogOut" class="dropdown-item">Log Out</a>
 							</div>
 						</div>
