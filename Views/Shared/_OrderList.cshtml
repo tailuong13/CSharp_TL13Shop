@@ -44,3 +44,58 @@
 		</div>
 	</div>
 </div>
+
+<!-- Modal Order Detail -->
+<div class="modal">
+	<div class="modal__overlay">
+	</div>
+	<div class="modal__body">
+		<div class="detail-layout">
+			<div class="detail-layout__container">
+				<div class="detail-layout__header">
+					<i class="detail-layout__icon fa fa-clipboard"></i>
+					<h3 class="detail-layout__heading">Order Details</h3>
+					<div class="detail-layout__x-button">
+						<i class="detail-layout__x-icon fa fa-close"></i>
+					</div>
+				</div>
+				<div class="detail-layout__form">
+					<table class="table detail-table">
+						<thead>
+							<tr>
+								<th scope="col">Customer Name</th>
+								<th scope="col">Customer Address</th>
+								<th scope="col">Customer Phone</th>
+								<th scope="col">Price</th>
+								<th scope="col">Style</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Modal Order Detail -->
+
+	<script>
+	function loadOrderDetails(orderId, productId) {
+		$.ajax({
+			url: '/User/OrderDetails',
+			dataType: 'html',
+			type: 'GET',
+			data: { orderId: orderId, productId: productId },
+			success: function (response) {
+				console.log(response);
+				$('.detail-table tbody').html(response);
+				$('.modal').show();
+			}
+				error: function (error) {
+				alert("An error occurred while loading the order details.");
+			}
+		});
+	}
+</script>

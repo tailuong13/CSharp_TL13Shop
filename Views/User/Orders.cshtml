@@ -38,7 +38,11 @@
 					<td>@item.Total</td>
 					<td>@item.OrderDate</td>
 					<td>
-						<a asp-action="OrderDetails" asp-controller="User" asp-route-orderId="@item.OrderId" class="btn btn-primary">Details</a>
+						<a asp-action="OrderDetails" asp-controller="User" asp-route-orderId="@item.OrderId" asp-route-productId="@item.ProductId"  class="btn btn-primary">Details</a>
+						@if (item.StatusId == 1)
+						{
+							<a asp-action="CancelOrder" asp-controller="User" asp-route-orderId="@item.OrderId" class="btn btn-danger">Cancel</a>
+						}	
 					</td>
 				</tr>
 			}

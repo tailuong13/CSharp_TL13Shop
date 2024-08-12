@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
@@ -202,6 +203,7 @@ namespace TL13Shop.Controllers
 			{
 				OrderId = o.OrderId,
 				ProductId = o.ProductId,
+				StatusId = o.Order.StatusId,
 				ProductName = o.Product.ProductName,
 				ProductImageUrl = o.Product.ProductImages.FirstOrDefault().ImageUrl,
 				Quantity = o.Amount,
@@ -225,6 +227,7 @@ namespace TL13Shop.Controllers
             {
                 OrderId = o.OrderId,
                 ProductId = o.ProductId,
+				StatusId = o.Order.StatusId,
                 ProductName = o.Product.ProductName,
                 ProductImageUrl = o.Product.ProductImages.FirstOrDefault().ImageUrl,
                 Quantity = o.Amount,
@@ -233,6 +236,12 @@ namespace TL13Shop.Controllers
             });
 
             return View(data);
+		}
+
+		public IActionResult OrderDetails(int orderId, int productId)
+		{
+			var viewComponentResult = ViewComponent("OrderDetail", new { orderId = orderId , productId = productId} );
+			return viewComponentResult;
 		}
 	}
 }
