@@ -3,9 +3,7 @@
 	public class OrderDetailViewModel
 	{
 		public int DetailId { get; set; }
-
 		public int OrderId { get; set; }
-
 		public string CustomerName { get; set; }
 		public string CustomerAddress { get; set; }
 		public string CustomerPhone { get; set; }

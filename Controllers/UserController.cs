@@ -172,7 +172,7 @@ namespace TL13Shop.Controllers
 
 						if (Image != null)
 						{
-							var userIdFolder = user.UserId.ToString(); 
+							var userIdFolder = user.UserId.ToString();
 							user.ImageUrl = Util.UploadImage(Image, userIdFolder);
 						}
 						db.SaveChanges();
@@ -201,6 +201,7 @@ namespace TL13Shop.Controllers
 				.Where(o => o.Order.UserId == userId);
 			var data = orders.Select(o => new OrdersByStatusViewModel
 			{
+				DetailId = o.DetailId,
 				OrderId = o.OrderId,
 				ProductId = o.ProductId,
 				StatusId = o.Order.StatusId,
@@ -221,27 +222,53 @@ namespace TL13Shop.Controllers
 			if (statusId != null)
 			{
 				orders = orders.Where(o => o.Order.StatusId == statusId);
-            }
-			
-			var data = orders.Select(o => new OrdersByStatusViewModel
-            {
-                OrderId = o.OrderId,
-                ProductId = o.ProductId,
-				StatusId = o.Order.StatusId,
-                ProductName = o.Product.ProductName,
-                ProductImageUrl = o.Product.ProductImages.FirstOrDefault().ImageUrl,
-                Quantity = o.Amount,
-                Price = o.Product.Price,
-				OrderDate = o.Order.OrderDate
-            });
+			}
 
-            return View(data);
+			var data = orders.Select(o => new OrdersByStatusViewModel
+			{
+				DetailId = o.DetailId,
+				OrderId = o.OrderId,
+				ProductId = o.ProductId,
+				StatusId = o.Order.StatusId,
+				ProductName = o.Product.ProductName,
+				ProductImageUrl = o.Product.ProductImages.FirstOrDefault().ImageUrl,
+				Quantity = o.Amount,
+				Price = o.Product.Price,
+				OrderDate = o.Order.OrderDate
+			});
+
+			return View(data);
 		}
 
-		public IActionResult OrderDetails(int orderId, int productId)
+		public IActionResult OrderDetails(int detailId)
 		{
-			var viewComponentResult = ViewComponent("OrderDetail", new { orderId = orderId , productId = productId} );
-			return viewComponentResult;
+			var order = db.OrderDetails
+						.Include(o => o.Order)
+						.Include(o => o.Product)
+						.FirstOrDefault(o => o.DetailId == detailId);
+			var data = new OrderDetailViewModel
+			{
+				DetailId = order.DetailId,
+				OrderId = order.OrderId,
+				CustomerName = order.Order.CustomerName,
+				CustomerAddress = order.Order.CustomerAddress,
+				CustomerPhone = order.Order.CustomerPhone,
+				Price = order.Product.Price,
+				Style = order.Product.Color
+			};
+			return PartialView("_OrderDetail", data);
+		}
+		[HttpPost]
+		public IActionResult cancelOrder(int detailId)
+		{
+			var order = db.OrderDetails 
+				.Include(o => o.Order)
+				.FirstOrDefault(o => o.DetailId== detailId);
+			if (order != null)
+			{
+				order.Order.StatusId = 4;
+			}
+			return View();
 		}
 	}
 }

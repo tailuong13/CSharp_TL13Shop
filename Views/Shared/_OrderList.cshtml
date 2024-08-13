@@ -46,56 +46,64 @@
 </div>
 
 <!-- Modal Order Detail -->
-<div class="modal">
-	<div class="modal__overlay">
-	</div>
-	<div class="modal__body">
-		<div class="detail-layout">
-			<div class="detail-layout__container">
-				<div class="detail-layout__header">
-					<i class="detail-layout__icon fa fa-clipboard"></i>
-					<h3 class="detail-layout__heading">Order Details</h3>
-					<div class="detail-layout__x-button">
-						<i class="detail-layout__x-icon fa fa-close"></i>
-					</div>
-				</div>
-				<div class="detail-layout__form">
-					<table class="table detail-table">
-						<thead>
-							<tr>
-								<th scope="col">Customer Name</th>
-								<th scope="col">Customer Address</th>
-								<th scope="col">Customer Phone</th>
-								<th scope="col">Price</th>
-								<th scope="col">Style</th>
-							</tr>
-						</thead>
-						<tbody>
-
-						</tbody>
-					</table>
-				</div>
+<<div class="modal fade" id="orderDetailsModal" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" id="orderDetailsContent">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 	</div>
 </div>
 <!-- End Modal Order Detail -->
 
-	<script>
-	function loadOrderDetails(orderId, productId) {
-		$.ajax({
-			url: '/User/OrderDetails',
-			dataType: 'html',
-			type: 'GET',
-			data: { orderId: orderId, productId: productId },
-			success: function (response) {
-				console.log(response);
-				$('.detail-table tbody').html(response);
-				$('.modal').show();
-			}
-				error: function (error) {
-				alert("An error occurred while loading the order details.");
-			}
-		});
-	}
-</script>
+<!-- Cancel Modal -->
+<div class="modal fade" id="confirmCancelModal" tabindex="-1" role="dialog" aria-labelledby="confirmCancelLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="confirmCancelLabel">Confirm Cancel Order</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to cancel this order?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+				<button type="button" class="btn btn-danger" id="confirmCancelOrder">Yes, Cancel Order</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Cancel Modal -->
+
+@section Script {
+	<script type="text/javascript">
+		function loadOrderDetails(detailId) {
+			$.ajax({
+				url: '/User/OrderDetails',
+				type: 'GET',
+				data: { detailId: detailId },
+				success: function (response) {
+					console.log(response);
+					$('#orderDetailsContent').html(response);
+					$('#orderDetailsModal').modal('show');
+				},
+				error: function () {
+					alert('Error loading order details.');
+				}
+			});
+		}
+	</script>
+}
+

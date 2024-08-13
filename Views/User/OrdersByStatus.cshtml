@@ -38,10 +38,14 @@
 					<td>@item.Total</td>
 					<td>@item.OrderDate</td>
 					<td>
-						<button class="btn btn-primary detail-btn" data-orderid="@item.OrderId" data-productid="@item.ProductId" onclick="loadOrderDetails(@item.OrderId, @item.ProductId)">Details</button>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderDetailsModal" onclick="loadOrderDetails(@item.DetailId)">
+							Details
+						</button>
 						@if (item.StatusId == 1)
 						{
-							<a asp-action="CancelOrder" asp-controller="User" asp-route-orderId="@item.OrderId" class="btn btn-danger">Cancel</a>
+							<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmCancelModal">
+								Cancel 
+							</button>
 						}
 					</td>
 				</tr>
