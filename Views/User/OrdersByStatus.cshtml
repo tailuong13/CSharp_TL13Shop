@@ -32,6 +32,7 @@
 			@foreach (var item in Model)
 			{
 				<tr>
+					<input type="hidden" id="detailId" value="@item.DetailId" />
 					<td>@item.ProductName</td>
 					<td><img src="~/@item.ProductImageUrl" alt="@item.ProductName" class="img-fluid" style="width: 100px; height: 100px;" /></td>
 					<td>@item.Quantity</td>
@@ -45,6 +46,12 @@
 						{
 							<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmCancelModal">
 								Cancel 
+							</button>
+						}
+						@if (item.StatusId == 3)
+						{
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reviewModal">
+								Review
 							</button>
 						}
 					</td>

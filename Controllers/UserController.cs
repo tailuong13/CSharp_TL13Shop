@@ -258,8 +258,8 @@ namespace TL13Shop.Controllers
 			};
 			return PartialView("_OrderDetail", data);
 		}
-		[HttpPost]
-		public IActionResult cancelOrder(int detailId)
+
+		public IActionResult CancelOrder(int detailId)
 		{
 			var order = db.OrderDetails 
 				.Include(o => o.Order)
@@ -267,8 +267,10 @@ namespace TL13Shop.Controllers
 			if (order != null)
 			{
 				order.Order.StatusId = 4;
+				db.SaveChanges();
+				return Json(new { success = true });
 			}
-			return View();
+			return Json(new { success = false });
 		}
 	}
 }
