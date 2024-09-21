@@ -9,7 +9,7 @@ namespace TL13Shop.Controllers
 {
 	public class CartController : Controller
 	{
-		public readonly Tl13shopContext db;
+		private readonly Tl13shopContext db;
 
 		public CartController(Tl13shopContext context)
 		{
@@ -98,6 +98,10 @@ namespace TL13Shop.Controllers
 		public IActionResult CheckOut(CheckoutViewModel model)
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (userId == null)
+            {
+                return RedirectToAction("Login", "User");
+            }
 			var user = db.Users.SingleOrDefault(u => u.UserId == int.Parse(userId));
 			if (ModelState.IsValid)
 			{
@@ -157,9 +161,7 @@ namespace TL13Shop.Controllers
 					db.Database.RollbackTransaction();
 				}
 			}
-
 			return View();
 		}
-
 	}
 }

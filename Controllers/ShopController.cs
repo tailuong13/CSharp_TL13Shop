@@ -8,7 +8,7 @@ namespace TL13Shop.Controllers
 {
     public class ShopController : Controller
     {
-        public readonly Tl13shopContext db;
+        private readonly Tl13shopContext db;
 
         public ShopController(Tl13shopContext context)
         {

@@ -14,7 +14,7 @@ namespace TL13Shop.Controllers
 {
 	public class UserController : Controller
 	{
-		public readonly Tl13shopContext db;
+		private readonly Tl13shopContext db;
 
 		public UserController(Tl13shopContext context)
 		{
@@ -78,7 +78,7 @@ namespace TL13Shop.Controllers
 			ViewBag.ReturnUrl = ReturnUrl;
 			return View();
 		}
-
+		
 		[HttpPost]
 		public async Task<IActionResult> Login(LoginVM model, string? ReturnUrl)
 		{
